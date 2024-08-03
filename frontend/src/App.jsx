@@ -1,9 +1,12 @@
-import React from 'react'
-import { Button } from './components/ui/button'
+import Navbar from './components/Navbar'
+import Landing from './pages/Landing'
 
 const App = () => {
   return (
-    <Button>Click me</Button>
+    <>
+      <Navbar />
+      <Landing />
+    </>
   )
 }
 

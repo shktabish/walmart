@@ -17,6 +17,13 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        satoshi: ["Satoshi-Regular", "sans-serif"],
+        satoshiBlack: ["Satoshi-Black", "sans-serif"],
+      },
+      backgroundImage: {
+        'custom-gradient': 'linear-gradient(135deg, #f976a5, #e976f3)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
