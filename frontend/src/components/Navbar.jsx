@@ -1,5 +1,6 @@
 import React from 'react'
 import { IoArrowForwardCircleSharp } from 'react-icons/io5'
+import { Link } from 'react-router-dom'
 
 const Navbar = () => {
   return (
@@ -7,10 +8,10 @@ const Navbar = () => {
         <div className='text-3xl font-bold' >
             ChatBot
         </div>
-        <div className='px-4 py-2 bg-custom-gradient text-sm font-bold text-black rounded-lg cursor-pointer flex justify-center items-center gap-1' >
+        <Link to="/login" className='px-4 py-2 bg-custom-gradient text-sm font-semibold text-black rounded-lg cursor-pointer flex justify-center items-center gap-1' >
             Try it now
             <IoArrowForwardCircleSharp className='text-black text-3xl ml-2 -rotate-45' />
-        </div>
+        </Link>
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { MouseBadge } from '@/components/ui/MouseBadge'
 import React from 'react'
 import { FaCirclePlay } from "react-icons/fa6"
 import { IoArrowForwardCircleSharp } from "react-icons/io5"
+import { Link } from 'react-router-dom'
 
 const Landing = () => {
   return (
@@ -22,10 +23,10 @@ const Landing = () => {
                 Revolutionize your shopping with our AI chatbot. Get personalized recommendations, find items in-store, and enjoy virtual try-ons with mannequins for a seamless, convenient experience.
             </div>
             <div className='text-lg flex flex-wrap justify-center items-center max-sm:gap-5 gap-10 px-5' >
-                <div className='max-sm:px-4 px-8 py-3 bg-custom-gradient max-sm:text-sm font-semibold text-black rounded-lg cursor-pointer flex justify-center items-center gap-2' >
+                <Link to="/login" className='max-sm:px-4 px-8 py-3 bg-custom-gradient max-sm:text-sm font-semibold text-black rounded-lg cursor-pointer flex justify-center items-center gap-2' >
                     Get Started
                     <IoArrowForwardCircleSharp className='text-black text-3xl ml-2 -rotate-45' />
-                </div>
+                </Link>
                 <div className='max-sm:px-4 px-8 py-3 max-sm:text-sm font-semibold rounded-lg border-2 border-white cursor-pointer flex justify-center items-center gap-2' >
                     <FaCirclePlay className='text-white text-2xl mr-2' />
                     Watch Video
