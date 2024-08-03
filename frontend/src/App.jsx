@@ -1,11 +1,13 @@
-import Navbar from './components/Navbar'
 import Landing from './pages/Landing'
+import LoginPage from './pages/LoginPage'
+import SignupPage from './pages/SignupPage'
 
 const App = () => {
   return (
     <>
-      <Navbar />
-      <Landing />
+      {/* <Landing /> */}
+      {/* <LoginPage /> */}
+      {/* <SignupPage /> */}
     </>
   )
 }
