@@ -48,12 +48,12 @@ function Message({ avatarSrc, name, message, isUser }) {
         {!isUser && <div className="font-medium">{name}</div>}
         <div>{message}</div>
       </div>
-      {isUser && (
+      {/* {isUser && (
         <Avatar className="w-8 h-8 border">
           <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
           <AvatarFallback>YO</AvatarFallback>
         </Avatar>
-      )}
+      )} */}
     </div>
   )
 }
