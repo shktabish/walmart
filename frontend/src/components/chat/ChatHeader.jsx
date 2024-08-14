@@ -1,6 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { PaperclipIcon, SmileIcon } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
+import { Link } from "react-router-dom"
 
 export function ChatHeader() {
   return (
@@ -13,14 +14,10 @@ export function ChatHeader() {
         <div className="font-medium">Acme Inc</div>
       </div>
       <div className="ml-auto flex items-center gap-2">
-        <Button variant="ghost" size="icon">
-          <PaperclipIcon className="w-4 h-4" />
-          <span className="sr-only">Attach file</span>
-        </Button>
-        <Button variant="ghost" size="icon">
-          <SmileIcon className="w-4 h-4" />
-          <span className="sr-only">Add emoji</span>
-        </Button>
+        <Link to="/cart">
+          <ShoppingCart className='w-4 h-4' />
+          <span className="sr-only">Cart icon</span>
+        </Link>
       </div>
     </header>
   )

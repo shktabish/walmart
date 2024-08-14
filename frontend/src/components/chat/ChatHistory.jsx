@@ -2,6 +2,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Link } from "react-router-dom"
 
 export function ChatHistory() {
+  
+
   return (
     <aside className="hidden w-64 border-r bg-muted/40 sm:flex flex-col">
       <div className="flex h-14 items-center border-b px-4">

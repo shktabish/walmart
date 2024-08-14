@@ -13,12 +13,12 @@ const SignupPage = () => {
         e.preventDefault()
     }
 
-    // const handleFileChange = (e) => {
-    //     setFormData({
-    //         ...formData,
-    //         avatar: e.target.files[0]
-    //     })
-    // }
+    const handleFileChange = (e) => {
+        setFormData({
+            ...formData,
+            avatar: e.target.files[0]
+        })
+    }
 
     return (
         <div className="h-screen w-full grid grid-cols-1 md:grid-cols-2 bg-black overflow-hidden">
@@ -52,7 +52,7 @@ const SignupPage = () => {
                             onChange={(e) => setFormData({...formData, password: e.target.value})}
                             className="w-full my-3 mb-8 bg-transparent border-2 border-[#4C4D4E] rounded-full text-white px-6 py-3 focus:outline-none focus:border-white"
                         />
-                        {/* <label className="text-white cursor-pointer" >
+                        <label className="text-white cursor-pointer" >
                             <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                             {formData.avatar ? (
                                 <>
@@ -62,7 +62,7 @@ const SignupPage = () => {
                             ) : (
                                 <span className="bg-transparent border-2 border-[#4C4D4E] py-2 px-4 rounded-full w-max">Select avatar</span>
                             )}
-                        </label> */}
+                        </label>
                         <button type="submit" className="w-full mt-10 bg-custom-gradient text-black p-2 rounded-full text-lg font-semibold">Sign Up</button>
                     </form>
                 </div>
