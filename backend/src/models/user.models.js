@@ -21,10 +21,6 @@ const userSchema = new Schema(
             type: String,
             required: true
         },
-        status: {
-            type: String,
-            default: 'Hey there! I am using ChatterBox.'
-        },
         avatar: {
             type: String
         },

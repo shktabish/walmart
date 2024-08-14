@@ -49,8 +49,6 @@ export const registerUser = async(req, res) => {
             return res.status(400).json({message: 'User already exists with this email address.'})
         }
 
-        const status = req.body.status || 'Hey there! I am using ChatterBox.'
-
         let avatarLocalPath, avatar, response
         if(req.file) {
             avatarLocalPath = req.file.path
@@ -67,7 +65,6 @@ export const registerUser = async(req, res) => {
             name,
             email,
             password,
-            status,
             avatar
         })
 
