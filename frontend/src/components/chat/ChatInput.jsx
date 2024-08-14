@@ -2,34 +2,49 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import api from "@/utils/axios"
 import { ArrowUpIcon, Mic } from "lucide-react"
-import { useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
-export function ChatInput() {
-  const [message, setMessage] = useState("")
-  const { chatId } = useParams()
+export function ChatInput({ message, setMessage, setMessages }) {
+  const navigate = useNavigate()
+  const url = window.location.href;
+  const chatId = url.split('/').pop()
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!(message.trim() === "")) {
       console.log(`Sending message: ${message}`)
-      
+
+      setMessage("")
+
       if(!chatId) {
-        createChat()
+        const res = await createChat()
+        navigate(`/chat/${res?.chat?._id}`)
       } else {
-        console.log("Updating chat")
+        setMessages((prev) => [...prev, { sender: "user", message }])
+        const res = await updateChat()
+        const { sender, products } = res.response
+        setMessages((prev) => [...prev, { sender, products }])
       }
     }
-    setMessage("")
   }
 
   const createChat = async () => {
     try {
       const { data } = await api.post("/chat/createChat", { firstMessage: message })
-      console.log(data)
+      return data
     } catch (error) {
       console.error(error)
     }
   }
+
+  const updateChat = async () => {
+    try {
+      const { data } = await api.put(`/chat/updateChat/${chatId}`, { message })
+      return data
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
 
   return (
     <div className="border-t bg-muted/40 p-4">
@@ -40,7 +55,7 @@ export function ChatInput() {
           id="message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          rows={2}
+          rows={1}
           className="min-h-[48px] rounded-2xl resize-none p-4 border border-neutral-400 shadow-sm pr-20"
         />
         <Mic className="absolute w-6 h-6 top-4 right-14" />

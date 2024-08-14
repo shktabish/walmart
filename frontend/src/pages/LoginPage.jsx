@@ -21,7 +21,7 @@ const LoginPage = () => {
         try {
             const success = await loginUser(formData.email, formData.password);
             if (success) {
-                navigate('/chat/*'); 
+                navigate('/chat'); 
             } else {
                 setError('Invalid email or password'); 
             }

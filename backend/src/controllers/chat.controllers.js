@@ -15,7 +15,7 @@ const getBotResponse = async (message) => {
 
 export const getChatHistory = async (req, res) => {
     try {
-        const chatHistory = await Chat.find({user: req.user._id})
+        const chatHistory = await Chat.find({user: req.user._id}).select('-message')
         return res.status(200).json({chatHistory})
     } catch (error) {
         console.log(error.message)
@@ -26,6 +26,7 @@ export const getChatHistory = async (req, res) => {
 export const createChat = async (req, res) => {
     try {
         const { firstMessage } = req.body
+        console.log("here")
         const message = {sender: 'user', message: firstMessage}
         const botRes = await getBotResponse(firstMessage)
         const chat = await Chat.create({firstMessage, user: req.user._id, message: [message, botRes] })

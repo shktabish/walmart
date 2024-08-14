@@ -1,29 +1,48 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import api from "@/utils/axios"
+import { useEffect } from "react"
+import { useParams } from "react-router-dom"
+import CardsSection from "../CardsSection"
 
-export function ChatMessages() {
+export function ChatMessages({ messages, setMessages }) {
+  const { chatId } = useParams()
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const fetchData = async () => {
+    try {
+      const { data } = await api.get(`/chat/getMessages/${chatId}`)
+      setMessages(data.message)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
-    <div className="flex-1 overflow-auto p-4">
+    <div className="h-[calc(100vh-88px-56px)] overflow-y-scroll p-4">
       <div className="grid gap-4">
-        <Message
-          avatarSrc="/placeholder-user.jpg"
-          name="Acme Inc"
-          message="Hi there! I'm having trouble with my order. Can you help me out?"
-          isUser={false}
-        />
-        <Message
-          message="Sure, I'd be happy to help. What seems to be the issue with your order?"
-          isUser={true}
-        />
-        <Message
-          avatarSrc="/placeholder-user.jpg"
-          name="Acme Inc"
-          message="Well, I placed an order last week and it still hasn't arrived. I'm starting to get worried."
-          isUser={false}
-        />
-        <Message
-          message="Okay, let me look into that for you. Can you provide the order number or your contact information?"
-          isUser={true}
-        />
+        {messages.map((message) => (
+          message.sender === "user" ? (
+            <Message
+              key={message._id}
+              message={message.message}
+              isUser={true}
+            />
+          ) : (
+            <>
+              <Message
+                key={message._id}
+                avatarSrc="/placeholder-user.jpg"
+                name="Acme Inc"
+                message="Hi there! I'm having trouble with my order. Can you help me out?"
+                isUser={false}
+              />
+              <CardsSection products={message.products} />
+            </>
+          )
+        ))}
       </div>
     </div>
   )
@@ -48,12 +67,6 @@ function Message({ avatarSrc, name, message, isUser }) {
         {!isUser && <div className="font-medium">{name}</div>}
         <div>{message}</div>
       </div>
-      {/* {isUser && (
-        <Avatar className="w-8 h-8 border">
-          <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
-          <AvatarFallback>YO</AvatarFallback>
-        </Avatar>
-      )} */}
     </div>
   )
 }
