@@ -15,7 +15,7 @@ export function ChatInput({ message, setMessage, setMessages }) {
 
       setMessage("")
 
-      if(!chatId) {
+      if(chatId === "chat") {
         const res = await createChat()
         navigate(`/chat/${res?.chat?._id}`)
       } else {

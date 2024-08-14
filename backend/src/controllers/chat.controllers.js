@@ -15,7 +15,7 @@ const getBotResponse = async (message) => {
 
 export const getChatHistory = async (req, res) => {
     try {
-        const chatHistory = await Chat.find({user: req.user._id}).select('-message')
+        const chatHistory = await Chat.find({user: req.user._id})
         return res.status(200).json({chatHistory})
     } catch (error) {
         console.log(error.message)

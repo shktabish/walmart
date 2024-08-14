@@ -9,7 +9,7 @@ export function ChatMessages({ messages, setMessages }) {
 
   useEffect(() => {
     fetchData()
-  }, [])
+  }, [chatId])
 
   const fetchData = async () => {
     try {
@@ -21,7 +21,7 @@ export function ChatMessages({ messages, setMessages }) {
   }
 
   return (
-    <div className="h-[calc(100vh-88px-56px)] overflow-y-scroll p-4">
+    <div className="h-[calc(100vh-88px-56px)] overflow-y-scroll p-4 flex flex-col-reverse">
       <div className="grid gap-4">
         {messages.map((message) => (
           message.sender === "user" ? (
