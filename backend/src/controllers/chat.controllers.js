@@ -26,8 +26,9 @@ export const getChatHistory = async (req, res) => {
 export const createChat = async (req, res) => {
     try {
         const { firstMessage } = req.body
-        const message = [{sender: 'user', message: firstMessage}]
-        const chat = await Chat.create({firstMessage, user: req.user._id, message })
+        const message = {sender: 'user', message: firstMessage}
+        const botRes = await getBotResponse(firstMessage)
+        const chat = await Chat.create({firstMessage, user: req.user._id, message: [message, botRes] })
         return res.status(201).json({chat})
     } catch (error) {
         console.log(error.message)
@@ -51,11 +52,10 @@ export const updateChat = async (req, res) => {
         chat.message.push(userMessage)
 
         const response = await getBotResponse(message)
-        console.log(response)
         chat.message.push(response)
 
         await chat.save()
-        return res.status(200).json({chat})
+        return res.status(200).json({response})
     } catch (error) {
         console.log(error.message)
         return res.status(500).json({message: "Something went wrong while updating the chat."})
