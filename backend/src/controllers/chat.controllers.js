@@ -1,10 +1,16 @@
 import Chat from '../models/chat.model.js'
 import { generateDescription } from '../utils/geminiDescp.js'
+import { getTopRecommendations } from '../utils/recommender.js';
+
+const getBotResponse = async (message) => {
+    const description = await generateDescription(message)
+    const getTopRecommendations = await getTopRecommendations(description)
+    return {sender: 'bot', message: getTopRecommendations}
+}
 
 export const getChatHistory = async (req, res) => {
     try {
         const chatHistory = await Chat.find({user: req.user._id})
-        chatHistory
         return res.status(200).json({chatHistory})
     } catch (error) {
         console.log(error.message)
@@ -26,7 +32,7 @@ export const createChat = async (req, res) => {
 
 export const updateChat = async (req, res) => {
     try {
-        const chat = await Chat.findById(req.params.id)
+        const chat = await Chat.findById(req.params.chatId)
         if (!chat) {
             return res.status(404).json({message: "Chat not found"})
         }
@@ -39,12 +45,25 @@ export const updateChat = async (req, res) => {
         const userMessage = {sender: 'user', message}
         chat.message.push(userMessage)
 
-        const description = await generateDescription(message)
+        const response = getBotResponse(message)
         
         await chat.save()
         return res.status(200).json({chat})
     } catch (error) {
         console.log(error.message)
         return res.status(500).json({message: "Something went wrong while updating the chat."})
+    }
+}
+
+export const getMessages = async (req, res) => {
+    try {
+        const chat = await Chat.findById(req.params.chatId)
+        if (!chat) {
+            return res.status(404).json({message: "Chat not found"})
+        }
+        return res.status(200).json({message: chat.message})
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json({message: "Something went wrong while fetching the messages."})
     }
 }
