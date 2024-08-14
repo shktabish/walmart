@@ -1,15 +1,35 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useUser } from '../context/UserContext'
+import { useNavigate } from 'react-router-dom'
+
+
+
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
-    }) 
+    });
+    const [error, setError] = useState(null); // Define the error state
+    const { loginUser } = useUser();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-    }
+        e.preventDefault();
+        setError(null); 
+        try {
+            const success = await loginUser(formData.email, formData.password);
+            if (success) {
+                navigate('/chat/*'); 
+            } else {
+                setError('Invalid email or password'); 
+            }
+        } catch (err) {
+            setError('An unexpected error occurred.'); 
+        }
+    };
+
 
   return (
     <div className="h-screen w-full grid grid-cols-1 md:grid-cols-2 bg-black overflow-hidden">

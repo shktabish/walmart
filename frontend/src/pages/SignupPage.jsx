@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useUser } from '../context/UserContext'
 
 const SignupPage = () => {
     const [formData, setFormData] = useState({
@@ -8,16 +10,26 @@ const SignupPage = () => {
         password: '',
         avatar: null
     })
-
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-    }
+    const [error, setError] = useState(null) 
+    const { signupUser } = useUser()
+    const navigate = useNavigate()
 
     const handleFileChange = (e) => {
         setFormData({
             ...formData,
             avatar: e.target.files[0]
         })
+    }
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setError(null) 
+        const success = await signupUser(formData)
+        if (success) {
+            navigate('/login') 
+        } else {
+            setError('Signup failed. Please try again.') 
+        }
     }
 
     return (

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import pg from 'pg';
-import * as tf from '@tensorflow/tfjs-node';
+import * as tf from '@tensorflow/tfjs';
 import * as use from '@tensorflow-models/universal-sentence-encoder';
 
 const config = {
