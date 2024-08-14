@@ -3,9 +3,14 @@ import { generateDescription } from '../utils/geminiDescp.js'
 import { getTopRecommendations } from '../utils/recommender.js';
 
 const getBotResponse = async (message) => {
-    const description = await generateDescription(message)
-    const getTopRecommendations = await getTopRecommendations(description)
-    return {sender: 'bot', message: getTopRecommendations}
+    try {
+        const description = await generateDescription(message);
+        const response = await getTopRecommendations(description);
+        return { sender: 'bot', products: response };
+    } catch (error) {
+        console.error("Error generating bot response:", error);
+        return { sender: 'bot', products: "Sorry, I couldn't process your request." };
+    }
 }
 
 export const getChatHistory = async (req, res) => {
@@ -45,8 +50,10 @@ export const updateChat = async (req, res) => {
         const userMessage = {sender: 'user', message}
         chat.message.push(userMessage)
 
-        const response = getBotResponse(message)
-        
+        const response = await getBotResponse(message)
+        console.log(response)
+        chat.message.push(response)
+
         await chat.save()
         return res.status(200).json({chat})
     } catch (error) {

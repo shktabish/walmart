@@ -11,6 +11,31 @@ const chatSchema = new mongoose.Schema(
                 message: {
                     type: String,
                 },
+                products: [
+                    {
+                        product_name: {
+                            type: String,
+                        },
+                        image_link: {
+                            type: String,
+                        },
+                        product_link: {
+                            type: String,
+                        },
+                        ratings: {
+                            type: Number,
+                        },
+                        discount_price: {
+                            type: Number,
+                        },
+                        actual_price: {
+                            type: Number,
+                        },
+                        description: {
+                            type: String,
+                        },
+                    },
+                ],
             }
         ],
         fristMessage: {

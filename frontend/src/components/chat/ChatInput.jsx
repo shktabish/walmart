@@ -1,17 +1,34 @@
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
+import api from "@/utils/axios"
 import { ArrowUpIcon, Mic } from "lucide-react"
 import { useState } from "react"
+import { useParams } from "react-router-dom"
 
 export function ChatInput() {
   const [message, setMessage] = useState("")
+  const { chatId } = useParams()
 
   const handleClick = () => {
     if (!(message.trim() === "")) {
       console.log(`Sending message: ${message}`)
-      // Send message to the server
+      
+      if(!chatId) {
+        createChat()
+      } else {
+        console.log("Updating chat")
+      }
     }
     setMessage("")
+  }
+
+  const createChat = async () => {
+    try {
+      const { data } = await api.post("/chat/createChat", { firstMessage: message })
+      console.log(data)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (

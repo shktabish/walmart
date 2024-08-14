@@ -1,8 +1,13 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 export function ChatHistory() {
-  
+  const [chatHistory, setChatHistory] = useState([])
+
+  useEffect(() => {
+    // Fetch chat history
+  }, [])
 
   return (
     <aside className="hidden w-64 border-r bg-muted/40 sm:flex flex-col">
