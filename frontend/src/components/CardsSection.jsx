@@ -1,11 +1,18 @@
 import { Star } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
+import ProductComponent from './ProductCard'
 
 const CardsSection = ({ products }) => {
+  const [selectedProduct, setSelectedProduct] = useState(null)
+
   return (
-    <div className="flex flex-wrap space-x-4">
+    <div className="flex flex-wrap space-x-4 ml-14">
       {products.map((product, index) => (
-        <div key={index} className="w-48 h-60 ml-14 overflow-hidden px-2 flex flex-col justify-center gap-2 border-[1px] border-black rounded-xl">
+        <div 
+          onClick={() => setSelectedProduct(product)}
+          key={index} 
+          className="w-48 h-60 overflow-hidden px-2 flex flex-col justify-center gap-2 border-[1px] border-black rounded-xl cursor-pointer"
+        >
           <img src={product.image_link} alt="product image" className="h-1/2 aspect-square mx-auto" />
           <div className="truncate">{product.product_name}</div>
           <div className="flex gap-2 items-center">
@@ -18,6 +25,7 @@ const CardsSection = ({ products }) => {
           </div>
         </div>
       ))}
+      {selectedProduct && <ProductComponent product={selectedProduct} setProduct={setSelectedProduct} />}
     </div>
   )
 }
