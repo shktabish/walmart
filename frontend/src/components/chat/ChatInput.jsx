@@ -2,12 +2,26 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import api from "@/utils/axios"
 import { ArrowUpIcon, Mic } from "lucide-react"
+import { useState, useEffect, useRef } from "react";
+import { useChat } from "@/context/ChatContext";
 import { useNavigate } from "react-router-dom"
+
 
 export function ChatInput({ message, setMessage, setMessages }) {
   const navigate = useNavigate()
-  const url = window.location.href;
-  const chatId = url.split('/').pop()
+  const [message, setMessage] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const { chatId } = useChat();
+  const mediaRecorderRef = useRef(null);
+
+  useEffect(() => {
+    console.log(`Chat ID from URL: ${chatId}`); 
+    if (isRecording) {
+      startRecording();
+    } else {
+      stopRecording();
+    }
+  }, [isRecording, chatId]);
 
   const handleClick = async () => {
     if (!(message.trim() === "")) {
@@ -45,6 +59,45 @@ export function ChatInput({ message, setMessage, setMessages }) {
     }
   }
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      mediaRecorderRef.current.start();
+
+      const audioChunks = [];
+      mediaRecorderRef.current.addEventListener('dataavailable', (event) => {
+        audioChunks.push(event.data);
+      });
+
+      mediaRecorderRef.current.addEventListener('stop', async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        const formData = new FormData();
+        formData.append('audio', audioBlob);
+        
+        try {
+          const { data } = await api.post(`/chat/audio/${chatId}`, formData);
+          console.log(data);
+        } catch (error) {
+          console.error("Error sending audio message:", error);
+        }
+      });
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+    }
+  }
+
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+  };
+
+  const handleMicClick = () => {
+    setIsRecording((prevState) => !prevState);
+  };
 
   return (
     <div className="border-t bg-muted/40 p-4">
@@ -58,7 +111,10 @@ export function ChatInput({ message, setMessage, setMessages }) {
           rows={1}
           className="min-h-[48px] rounded-2xl resize-none p-4 border border-neutral-400 shadow-sm pr-20"
         />
-        <Mic className="absolute w-6 h-6 top-4 right-14" />
+        <Mic 
+          className={`absolute w-6 h-6 top-4 right-14 ${isRecording ? 'text-red-500' : ''}`} 
+          onClick={handleMicClick}
+        />
         <Button 
           type="submit" 
           size="icon" 
@@ -70,5 +126,5 @@ export function ChatInput({ message, setMessage, setMessages }) {
         </Button>
       </div>
     </div>
-  )
-}
+  );
+

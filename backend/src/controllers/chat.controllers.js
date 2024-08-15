@@ -1,6 +1,9 @@
 import Chat from '../models/chat.model.js'
 import { generateDescription } from '../utils/geminiDescp.js'
 import { getTopRecommendations } from '../utils/recommender.js';
+import fs from 'fs';
+import { AssemblyAI } from 'assemblyai';
+import uploadOnCloudinary from '../utils/cloudinary.js';
 
 const getBotResponse = async (message) => {
     try {
@@ -75,3 +78,60 @@ export const getMessages = async (req, res) => {
         return res.status(500).json({message: "Something went wrong while fetching the messages."})
     }
 }
+
+
+
+const client = new AssemblyAI({
+    apiKey: "04a9b82a2bb74df1a4fb363e8cf0bd90" // Your AssemblyAI API key
+  });
+  
+  export const handleAudioInput = async (req, res) => {
+    try {
+      if (!req.file || !req.file.path) {
+        return res.status(400).json({ message: "No audio file uploaded" });
+      }
+  
+      
+      const cloudinaryResult = await uploadOnCloudinary(req.file.path);
+      const audioUrl = cloudinaryResult.secure_url;
+  
+      
+      if (!audioUrl.startsWith('http')) {
+        throw new Error('Transcript creation error, audio_url should start with http');
+      }
+  
+      
+      const config = {
+        audio_url: audioUrl
+      };
+  
+      const transcript = await client.transcripts.transcribe(config);
+  
+      
+      if (transcript.status !== 'completed') {
+        throw new Error('Transcript creation error');
+      }
+  
+      const transcriptionText = transcript.text;
+      console.log(`Transcription: ${transcriptionText}`);
+  
+      
+      const chat = await Chat.findById(req.params.chatId);
+      if (!chat) {
+        return res.status(404).json({ message: "Chat not found" });
+      }
+  
+      const userMessage = { sender: 'user', message: transcriptionText };
+      chat.message.push(userMessage);
+  
+      const botResponse = await getBotResponse(transcriptionText);
+      chat.message.push(botResponse);
+  
+      await chat.save();
+  
+      return res.status(200).json({ chat });
+    } catch (error) {
+      console.error("Error handling audio input:", error.message, error.stack);
+      return res.status(500).json({ message: "Something went wrong while processing the audio input." });
+    }
+  };

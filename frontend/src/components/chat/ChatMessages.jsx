@@ -1,11 +1,19 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { useChat } from "@/context/ChatContext";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 import api from "@/utils/axios"
-import { useEffect } from "react"
-import { useParams } from "react-router-dom"
 import CardsSection from "../CardsSection"
 
-export function ChatMessages({ messages, setMessages }) {
-  const { chatId } = useParams()
+export function ChatMessages() {
+  const { chatId } = useParams();
+  const { setChatId } = useChat();
+  
+  useEffect(() => {
+    if (chatId) {
+      setChatId(chatId);
+    }
+  }, [chatId, setChatId]);
 
   useEffect(() => {
     fetchData()

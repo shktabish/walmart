@@ -5,11 +5,13 @@ import SignupPage from './pages/SignupPage'
 import ChatPage from './pages/ChatPage'
 import CartPage from './pages/CartPage'
 import { UserProvider } from './context/UserContext'
+import { ChatProvider } from './context/ChatContext'
 
 
 const App = () => {
   return (
     <UserProvider>
+      <ChatProvider>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<LoginPage />} />
@@ -17,7 +19,8 @@ const App = () => {
         <Route path="/chat/*" element={<ChatPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="*" element={<h1>Not Found</h1>} />
-      </Routes>     
+      </Routes>   
+      </ChatProvider>  
     </UserProvider>
     
   )
