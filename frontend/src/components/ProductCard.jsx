@@ -96,8 +96,8 @@ export default function ProductComponent({ product, setProduct }) {
   }
 
   return (
-    <div className="absolute top-0 left-0 h-screen w-full bg-red-400">
-      <div className="grid justify-center md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6">
+    <div className="absolute top-0 -left-4 h-screen w-full bg-black/80 z-50 flex justify-center items-center">
+      <div className="relative grid justify-center md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 bg-white">
         <ProductImage image={product.image_link} />
         <ProductDetails
           product={product}
@@ -107,8 +107,8 @@ export default function ProductComponent({ product, setProduct }) {
           decreaseQuantity={decreaseQuantity}
           closeProduct={closeProduct}
         />
+        <CloseButton closeProduct={closeProduct} />
       </div>
-      <CloseButton closeProduct={closeProduct} />
     </div>
   )
 }
@@ -144,7 +144,7 @@ const ProductDetails = ({
 
 const ProductTitle = ({ title, description }) => (
   <div className="grid gap-2">
-    <h1 className="font-bold text-lg lg:text-xl">{title}</h1>
+    <h1 className="font-bold text-lg lg:text-xl mr-10">{title}</h1>
     <p>{description}</p>
     <div className="flex items-center gap-4">
       <Rating />
