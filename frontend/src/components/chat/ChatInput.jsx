@@ -1,21 +1,18 @@
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import api from "@/utils/axios"
-import { ArrowUpIcon, Mic } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import api from "@/utils/axios";
+import { ArrowUpIcon, Mic } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useChat } from "@/context/ChatContext";
-import { useNavigate } from "react-router-dom"
-
+import { useNavigate } from "react-router-dom";
 
 export function ChatInput({ message, setMessage, setMessages }) {
-  const navigate = useNavigate()
-  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
   const [isRecording, setIsRecording] = useState(false);
   const { chatId } = useChat();
   const mediaRecorderRef = useRef(null);
 
   useEffect(() => {
-    console.log(`Chat ID from URL: ${chatId}`); 
     if (isRecording) {
       startRecording();
     } else {
@@ -25,39 +22,37 @@ export function ChatInput({ message, setMessage, setMessages }) {
 
   const handleClick = async () => {
     if (!(message.trim() === "")) {
-      console.log(`Sending message: ${message}`)
+      setMessage("");
 
-      setMessage("")
-
-      if(chatId === "chat") {
-        const res = await createChat()
-        navigate(`/chat/${res?.chat?._id}`)
+      if (chatId === "chat") {
+        const res = await createChat();
+        navigate(`/chat/${res?.chat?._id}`);
       } else {
-        setMessages((prev) => [...prev, { sender: "user", message }])
-        const res = await updateChat()
-        const { sender, products } = res.response
-        setMessages((prev) => [...prev, { sender, products }])
+        setMessages((prev) => [...prev, { sender: "user", message }]);
+        const res = await updateChat();
+        const { sender, products } = res.response;
+        setMessages((prev) => [...prev, { sender, products }]);
       }
     }
-  }
+  };
 
   const createChat = async () => {
     try {
-      const { data } = await api.post("/chat/createChat", { firstMessage: message })
-      return data
+      const { data } = await api.post("/chat/createChat", { firstMessage: message });
+      return data;
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const updateChat = async () => {
     try {
-      const { data } = await api.put(`/chat/updateChat/${chatId}`, { message })
-      return data
+      const { data } = await api.put(`/chat/updateChat/${chatId}`, { message });
+      return data;
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const startRecording = async () => {
     try {
@@ -74,10 +69,12 @@ export function ChatInput({ message, setMessage, setMessages }) {
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
         const formData = new FormData();
         formData.append('audio', audioBlob);
-        
+
         try {
           const { data } = await api.post(`/chat/audio/${chatId}`, formData);
           console.log(data);
+          setMessages(prevMessages => [...prevMessages, ...data.messages]);
+
         } catch (error) {
           console.error("Error sending audio message:", error);
         }
@@ -85,8 +82,6 @@ export function ChatInput({ message, setMessage, setMessages }) {
     } catch (error) {
       console.error("Error accessing microphone:", error);
     }
-  }
-
   };
 
   const stopRecording = () => {
@@ -95,7 +90,7 @@ export function ChatInput({ message, setMessage, setMessages }) {
     }
   };
 
-  const handleMicClick = () => {
+  const handleMicClick =  () => {
     setIsRecording((prevState) => !prevState);
   };
 
@@ -113,7 +108,7 @@ export function ChatInput({ message, setMessage, setMessages }) {
         />
         <Mic 
           className={`absolute w-6 h-6 top-4 right-14 ${isRecording ? 'text-red-500' : ''}`} 
-          onClick={handleMicClick}
+          onClick={() => handleMicClick()}
         />
         <Button 
           type="submit" 
@@ -127,4 +122,4 @@ export function ChatInput({ message, setMessage, setMessages }) {
       </div>
     </div>
   );
-
+}

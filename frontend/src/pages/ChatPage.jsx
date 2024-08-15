@@ -4,7 +4,6 @@ import { ChatMessages } from "@/components/chat/ChatMessages"
 import { ChatInput } from "@/components/chat/ChatInput"
 import { NewChat } from "@/components/chat/NewChat"
 
-import { io } from "socket.io-client"
 import { Route, Routes,  useParams } from "react-router-dom"
 import { useChat } from "@/context/ChatContext";
 import { useEffect} from "react";
@@ -12,7 +11,6 @@ import { useState } from "react"
 
 
 export default function ChatPage() {
-  const socket = io("http://localhost:3000")
   const { chatId } = useParams();
   const { setChatId } = useChat();
   
@@ -25,7 +23,7 @@ export default function ChatPage() {
   
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([]) 
-  
+
   return (
     <div className="flex min-h-screen w-full bg-background text-black">
       <ChatHistory />

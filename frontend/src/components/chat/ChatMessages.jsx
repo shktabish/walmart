@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import api from "@/utils/axios"
 import CardsSection from "../CardsSection"
 
-export function ChatMessages() {
+export function ChatMessages({ messages, setMessages }) {
   const { chatId } = useParams();
   const { setChatId } = useChat();
   
