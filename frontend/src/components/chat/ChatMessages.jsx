@@ -43,8 +43,8 @@ export function ChatMessages({ messages, setMessages }) {
               <Message
                 key={message._id}
                 avatarSrc="/placeholder-user.jpg"
-                name="Acme Inc"
-                message="Hi there! I'm having trouble with my order. Can you help me out?"
+                name="Wall-e"
+                message="Hi there ! Can I help me out?"
                 isUser={false}
               />
               <CardsSection products={message.products} />
@@ -69,7 +69,7 @@ function Message({ avatarSrc, name, message, isUser }) {
       )}
       <div
         className={`grid gap-1 px-3 rounded-md max-w-[80%] ${
-          isUser ? "bg-muted text-black p-3" : ""
+          isUser ? "bg-[#2F2F2F] text-white p-3" : ""
         }`}
       >
         {!isUser && <div className="font-medium">{name}</div>}

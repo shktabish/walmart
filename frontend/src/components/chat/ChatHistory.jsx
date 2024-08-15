@@ -21,8 +21,8 @@ export function ChatHistory() {
   }, [])
 
   return (
-    <aside className="hidden w-64 border-r bg-muted/40 sm:flex flex-col">
-      <div className="flex h-14 items-center border-b px-4">
+    <aside className="hidden w-64 border-r border-r-white/30 bg-[#0E100F] sm:flex flex-col">
+      <div className="flex h-14 items-center px-4">
         <h2 className="text-lg font-semibold">Chat History</h2>
       </div>
       <div className="h-[calc(100vh-56px)] overflow-y-scroll overflow-x-hidden w-full py-4 px-2">
@@ -47,9 +47,9 @@ function ChatLink({ href, message }) {
   return (
     <Link
       to={href}
-      className="rounded-md bg-muted p-3 transition-colors hover:bg-muted/50 w-[240px] mx-auto"
+      className="rounded-md bg-white/10 p-3 transition-colors hover:bg-white/5 w-[240px] mx-auto"
     >
-      <div className="text-sm text-muted-foreground truncate">{message}</div>
+      <div className="text-sm text-[#CCCCCC] truncate">{message}</div>
     </Link>
   )
 }

@@ -25,7 +25,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState([]) 
 
   return (
-    <div className="flex min-h-screen w-full bg-background text-black">
+    <div className="flex min-h-screen w-full bg-[#0E100F]">
       <ChatHistory />
       <div className="flex flex-col w-full">
         <ChatHeader />

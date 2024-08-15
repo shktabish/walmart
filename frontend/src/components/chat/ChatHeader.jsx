@@ -5,14 +5,8 @@ import { Link } from "react-router-dom"
 
 export function ChatHeader() {
   return (
-    <header className="flex h-14 items-center border-b bg-muted/40 px-4 sm:px-6">
-      <div className="flex items-center gap-2">
-        <Avatar className="w-8 h-8 border">
-          <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
-          <AvatarFallback>AC</AvatarFallback>
-        </Avatar>
-        <div className="font-medium">Acme Inc</div>
-      </div>
+    <header className="flex h-14 items-center bg-[#0E100F] px-4 sm:px-6">
+      
       <div className="ml-auto flex items-center gap-2">
         <Link to="/cart">
           <ShoppingCart className='w-4 h-4' />

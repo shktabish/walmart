@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import { useCart } from "../context/CartContext";
 
 // Icon Components
 const MinusIcon = (props) => (
@@ -78,6 +79,7 @@ const StarIcon = ({ filled, ...props }) => (
 export default function ProductComponent({ product, setProduct }) {
   const [quantity, setQuantity] = useState(1)
   const [totalPrice, setTotalPrice] = useState(product.discount_price)
+  const { addToCart } = useCart();
 
   const increaseQuantity = () => {
     setQuantity((prevQuantity) => prevQuantity + 1)
@@ -95,9 +97,18 @@ export default function ProductComponent({ product, setProduct }) {
     setProduct(null)
   }
 
+  const handleAddToCart = () => {
+    addToCart({
+      product_name: product.product_name,
+      quantity,
+      totalPrice,
+      image_link: product.image_link,
+    });
+  };
+
   return (
     <div className="absolute top-0 -left-4 min-h-screen w-full bg-black/80 z-50 flex justify-center items-center md:p-4">
-      <div className="relative grid justify-center md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl mx-auto py-6 px-4 bg-white">
+      <div className="relative grid justify-center md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl mx-auto py-6 px-4 bg-white text-black">
         <ProductImage image={product.image_link} />
         <ProductDetails
           product={product}
@@ -106,6 +117,7 @@ export default function ProductComponent({ product, setProduct }) {
           increaseQuantity={increaseQuantity}
           decreaseQuantity={decreaseQuantity}
           closeProduct={closeProduct}
+          handleAddToCart={handleAddToCart}
         />
         <CloseButton closeProduct={closeProduct} />
       </div>
@@ -130,6 +142,7 @@ const ProductDetails = ({
   increaseQuantity,
   decreaseQuantity,
   closeProduct,
+  handleAddToCart,
 }) => (
   <div className="grid gap-4 md:gap-8">
     <ProductTitle title={product.product_name} description={product.description} />
@@ -138,6 +151,7 @@ const ProductDetails = ({
       quantity={quantity}
       increaseQuantity={increaseQuantity}
       decreaseQuantity={decreaseQuantity}
+      handleAddToCart = {handleAddToCart}
     />
   </div>
 )
@@ -167,14 +181,16 @@ const ProductPrice = ({ price }) => (
   <div className="text-4xl font-bold">${price.toFixed(2)}</div>
 )
 
-const ProductActions = ({ quantity, increaseQuantity, decreaseQuantity }) => (
+const ProductActions = ({ quantity, increaseQuantity, decreaseQuantity, handleAddToCart }) => (
   <div className="flex items-center justify-between">
     <QuantityControl
       quantity={quantity}
       increaseQuantity={increaseQuantity}
       decreaseQuantity={decreaseQuantity}
     />
-    <Button size="sm">Add to Cart</Button>
+     <Button size="sm" onClick={handleAddToCart}>
+        Add to Cart
+      </Button>
   </div>
 )
 

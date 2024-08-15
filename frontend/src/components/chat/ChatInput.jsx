@@ -5,12 +5,21 @@ import { ArrowUpIcon, Mic } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useChat } from "@/context/ChatContext";
 import { useNavigate } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 
 export function ChatInput({ message, setMessage, setMessages }) {
   const navigate = useNavigate();
   const [isRecording, setIsRecording] = useState(false);
   const { chatId } = useChat();
   const mediaRecorderRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [slectedCategory, setSelectedCategory] = useState(null);
+
+  const category = [
+    { name: "grocery_and_gourmet_food", title: "Grocery & Gourmet Food" },
+    { name: "home_and_kitchen", title: "Home & Kitchen" },
+    { name: "electronics", title: "Electronics" },
+  ]
 
   useEffect(() => {
     if (isRecording) {
@@ -22,17 +31,7 @@ export function ChatInput({ message, setMessage, setMessages }) {
 
   const handleClick = async () => {
     if (!(message.trim() === "")) {
-      setMessage("");
-
-      if (chatId === "chat") {
-        const res = await createChat();
-        navigate(`/chat/${res?.chat?._id}`);
-      } else {
-        setMessages((prev) => [...prev, { sender: "user", message }]);
-        const res = await updateChat();
-        const { sender, products } = res.response;
-        setMessages((prev) => [...prev, { sender, products }]);
-      }
+      setIsModalOpen(true); // Open modal on button click
     }
   };
 
@@ -90,12 +89,28 @@ export function ChatInput({ message, setMessage, setMessages }) {
     }
   };
 
-  const handleMicClick =  () => {
+  const handleMicClick = () => {
     setIsRecording((prevState) => !prevState);
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    // Continue with the logic after closing the modal
+    if (chatId === "chat") {
+      createChat().then((res) => {
+        navigate(`/chat/${res?.chat?._id}`);
+      });
+    } else {
+      setMessages((prev) => [...prev, { sender: "user", message }]);
+      updateChat().then((res) => {
+        const { sender, products } = res.response;
+        setMessages((prev) => [...prev, { sender, products }]);
+      });
+    }
+  };
+
   return (
-    <div className="border-t bg-muted/40 p-4">
+    <div className="bg-[#0E100F] p-4">
       <div className="relative">
         <Textarea
           placeholder="Type your message..."
@@ -104,7 +119,7 @@ export function ChatInput({ message, setMessage, setMessages }) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           rows={1}
-          className="min-h-[48px] rounded-2xl resize-none p-4 border border-neutral-400 shadow-sm pr-20"
+          className="min-h-[48px] rounded-2xl resize-none p-4 border bg-[#2F2F2F] border-neutral-400 shadow-sm pr-20"
         />
         <Mic 
           className={`absolute w-6 h-6 top-4 right-14 ${isRecording ? 'text-red-500' : ''}`} 
@@ -113,13 +128,40 @@ export function ChatInput({ message, setMessage, setMessages }) {
         <Button 
           type="submit" 
           size="icon" 
-          className="absolute w-8 h-8 top-3 right-3"
+          className="group absolute w-8 h-8 top-3 right-3 bg-white"
           onClick={() => handleClick()}
         >
-          <ArrowUpIcon className="w-4 h-4" />
-          <span className="sr-only">Send</span>
+          <ArrowUpIcon className="w-4 h-4 stroke-black group-hover:stroke-white" />
+          <span className="sr-only ">Send</span>
         </Button>
       </div>
+
+      {isModalOpen && (
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="w-[90%] mx-auto">
+            <DialogHeader>
+              <DialogTitle className="text-black" >Select a category</DialogTitle>
+              <DialogDescription>Choose one category who wish to look into.</DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-wrap gap-2" >
+              {
+                category.map((item) => (
+                  <div 
+                    key={item.name} 
+                    onClick={() => setSelectedCategory(item.name)}
+                    className={`px-4 py-2 rounded-full ${slectedCategory === item.name ? 'bg-black text-white' : 'bg-[#ccc] text-black'} `}
+                  >
+                    {item.title}
+                  </div>
+                ))
+              }
+            </div>
+            <DialogFooter>
+              <Button onClick={() => handleCloseModal()}>Submit</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
