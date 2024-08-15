@@ -96,8 +96,8 @@ export default function ProductComponent({ product, setProduct }) {
   }
 
   return (
-    <div className="absolute top-0 -left-4 h-screen w-full bg-black/80 z-50 flex justify-center items-center">
-      <div className="relative grid justify-center md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 bg-white">
+    <div className="absolute top-0 -left-4 min-h-screen w-full bg-black/80 z-50 flex justify-center items-center md:p-4">
+      <div className="relative grid justify-center md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl mx-auto py-6 px-4 bg-white">
         <ProductImage image={product.image_link} />
         <ProductDetails
           product={product}
