@@ -19,6 +19,7 @@ export function ChatInput({ message, setMessage, setMessages }) {
     { name: "grocery_and_gourmet_food", title: "Grocery & Gourmet Food" },
     { name: "home_and_kitchen", title: "Home & Kitchen" },
     { name: "electronics", title: "Electronics" },
+    { name: "shoes", title: "Shoes" },
   ]
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export function ChatInput({ message, setMessage, setMessages }) {
 
   const createChat = async () => {
     try {
-      const { data } = await api.post("/chat/createChat", { firstMessage: message });
+      const { data } = await api.post("/chat/createChat", { firstMessage: message, category: slectedCategory });
       return data;
     } catch (error) {
       console.error(error);
@@ -46,7 +47,7 @@ export function ChatInput({ message, setMessage, setMessages }) {
 
   const updateChat = async () => {
     try {
-      const { data } = await api.put(`/chat/updateChat/${chatId}`, { message });
+      const { data } = await api.put(`/chat/updateChat/${chatId}`, { message, category: slectedCategory });
       return data;
     } catch (error) {
       console.error(error);
@@ -93,20 +94,26 @@ export function ChatInput({ message, setMessage, setMessages }) {
     setIsRecording((prevState) => !prevState);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
     setIsModalOpen(false);
     // Continue with the logic after closing the modal
-    if (chatId === "chat") {
-      createChat().then((res) => {
-        navigate(`/chat/${res?.chat?._id}`);
-      });
-    } else {
-      setMessages((prev) => [...prev, { sender: "user", message }]);
-      updateChat().then((res) => {
-        const { sender, products } = res.response;
-        setMessages((prev) => [...prev, { sender, products }]);
-      });
+    if (!(message.trim() === "")) {
+      console.log(`Sending message: ${message}`)
+
+      setMessage("")
+
+      if(chatId === "chat") {
+        const res = await createChat()
+        setSelectedCategory(null);
+        navigate(`/chat/${res?.chat?._id}`)
+      } else {
+        setMessages((prev) => [...prev, { sender: "user", message }])
+        const res = await updateChat()
+        const { sender, products } = res.response
+        setMessages((prev) => [...prev, { sender, products }])
+      }
     }
+    setSelectedCategory(null);
   };
 
   return (

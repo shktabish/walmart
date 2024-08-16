@@ -5,10 +5,11 @@ import { AssemblyAI } from 'assemblyai';
 import uploadOnCloudinary from '../utils/cloudinary.js';
 import fs from 'fs';
 
-const getBotResponse = async (message) => {
+const getBotResponse = async (message, category) => {
     try {
         const description = await generateDescription(message);
-        const response = await getTopRecommendations(description);
+        console.log("Generated description:", description);
+        const response = await getTopRecommendations(description, category);
         return { sender: 'bot', products: response };
     } catch (error) {
         console.error("Error generating bot response:", error);
@@ -28,12 +29,11 @@ export const getChatHistory = async (req, res) => {
 
 export const createChat = async (req, res) => {
     try {
-        const { firstMessage } = req.body
-        console.log("here")
+        const { firstMessage, category } = req.body
         const message = {sender: 'user', message: firstMessage}
-        const botRes = await getBotResponse(firstMessage)
+        const botRes = await getBotResponse(firstMessage, category)
         const chat = await Chat.create({firstMessage, user: req.user._id, message: [message, botRes] })
-        return res.status(201).json({chat})
+        return res.status(201).json({ chat, category })
     } catch (error) {
         console.log(error.message)
         return res.status(500).json({message: "Something went wrong while creating the chat."})
@@ -47,19 +47,23 @@ export const updateChat = async (req, res) => {
             return res.status(404).json({message: "Chat not found"})
         }
 
-        const { message } = req.body
+        const { message, category } = req.body
         if(!message) {
             return res.status(400).json({message: "Message is required"})
+        }
+
+        if(!category) {
+            return res.status(400).json({message: "Category is required"})
         }
 
         const userMessage = {sender: 'user', message}
         chat.message.push(userMessage)
 
-        const response = await getBotResponse(message)
+        const response = await getBotResponse(message, category)
         chat.message.push(response)
 
         await chat.save()
-        return res.status(200).json({response})
+        return res.status(200).json({response, category})
     } catch (error) {
         console.log(error.message)
         return res.status(500).json({message: "Something went wrong while updating the chat."})

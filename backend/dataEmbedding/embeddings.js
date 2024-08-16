@@ -12,7 +12,7 @@ import * as tf from "@tensorflow/tfjs"
 import * as use from "@tensorflow-models/universal-sentence-encoder"
 
 //json file
-import home from "./grocery.json" assert { type: 'json' }
+import home from "./home.json" assert { type: 'json' }
 
 const config = {
     user: process.env.PG_NAME,
@@ -29,7 +29,7 @@ const config = {
 const db = pgp(config)
 
 const storeInPG = async (product) => {
-    const columns = new pgp.helpers.ColumnSet(['product_name', 'image_link', 'product_link', 'ratings', 'discount_price', 'actual_price', 'description', 'embedding'], {table: 'grocery_and_gourmet_food'});
+    const columns = new pgp.helpers.ColumnSet(['product_name', 'image_link', 'product_link', 'ratings', 'discount_price', 'actual_price', 'description', 'embedding'], {table: 'home_and_kitchen'});
 
     const values = [];
     for (let i = 0; i < product.length; i++) {    

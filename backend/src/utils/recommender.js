@@ -17,7 +17,7 @@ const config = {
 
 const pool = new pg.Pool(config);
 
-export const getTopRecommendations = async (text) => {
+export const getTopRecommendations = async (text, category) => {
     try {
         const model = await use.load();
         const embeddings = await model.embed(text);
@@ -26,7 +26,7 @@ export const getTopRecommendations = async (text) => {
         const client = await pool.connect();
 
         const pgResponse = await client.query(
-            `SELECT product_name, image_link, product_link, ratings, discount_price, actual_price, description FROM home_and_kitchen 
+            `SELECT product_name, image_link, product_link, ratings, discount_price, actual_price, description FROM ${category} 
             ORDER BY embedding <-> $1
             LIMIT 5;`, 
             [JSON.stringify(embeddingArray)]
